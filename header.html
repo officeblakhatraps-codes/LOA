@@ -1,0 +1,102 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Shared site header for Lowveld Application Office & Academy.
+ *
+ * Usage:
+ *   $pageTitle = 'Services';
+ *   $activePage = 'services';
+ *   require __DIR__ . '/header.php'; // adjust path for the including file
+ *
+ * This template expects includes/functions.php to have been loaded first.
+ */
+if (!function_exists('lao_e')) {
+    require_once __DIR__ . '/functions.php';
+}
+
+$pageTitle = isset($pageTitle) && is_string($pageTitle) && $pageTitle !== ''
+    ? $pageTitle
+    : 'Home';
+
+$activePage = isset($activePage) && is_string($activePage)
+    ? $activePage
+    : '';
+
+$siteName = 'Lowveld Application Office & Academy';
+
+/*
+ * Set LAO_BASE_URL in your configuration if the website is hosted in a
+ * subfolder. Examples:
+ *   ''                  for a domain-root installation
+ *   '/lowveld-applications' for a local XAMPP subfolder installation
+ */
+$baseUrl = defined('LAO_BASE_URL') ? rtrim((string) LAO_BASE_URL, '/') : '';
+
+$navItems = [
+    ['key' => 'home', 'label' => 'Home', 'path' => '/index.php'],
+    ['key' => 'about', 'label' => 'About Us', 'path' => '/about.php'],
+    ['key' => 'services', 'label' => 'Services', 'path' => '/services.php'],
+    ['key' => 'pricing', 'label' => 'Pricing', 'path' => '/pricing.php'],
+    ['key' => 'opportunities', 'label' => 'Opportunities', 'path' => '/opportunities.php'],
+    ['key' => 'academy', 'label' => 'Academy', 'path' => '/academy.php'],
+    ['key' => 'faq', 'label' => 'FAQs', 'path' => '/faq.php'],
+    ['key' => 'contact', 'label' => 'Contact', 'path' => '/contact.php'],
+];
+
+$flashNotice = function_exists('lao_flash_get') ? lao_flash_get('notice') : null;
+?>
+<!doctype html>
+<html lang="en-ZA">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#102b4e">
+    <meta name="description" content="Support with education applications, bursaries, career opportunities and skills development from Lowveld Application Office & Academy.">
+    <title><?= lao_e($pageTitle) ?> | <?= lao_e($siteName) ?></title>
+    <link rel="stylesheet" href="<?= lao_e($baseUrl) ?>/assets/css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<header class="site-header">
+    <div class="container site-header__inner">
+        <a class="brand" href="<?= lao_e($baseUrl) ?>/index.php" aria-label="<?= lao_e($siteName) ?> home">
+            <!-- Replace this temporary text mark with the approved original logo asset. -->
+            <span class="brand__mark" aria-hidden="true">LA</span>
+            <span class="brand__text">
+                <strong>Lowveld Application Office</strong>
+                <small>&amp; Academy</small>
+            </span>
+        </a>
+
+        <button
+            class="nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="primary-navigation"
+            aria-label="Open navigation menu"
+        >
+            <span></span><span></span><span></span>
+        </button>
+
+        <nav class="primary-navigation" id="primary-navigation" aria-label="Main navigation">
+            <?php foreach ($navItems as $item): ?>
+                <a
+                    href="<?= lao_e($baseUrl . $item['path']) ?>"
+                    class="<?= $activePage === $item['key'] ? 'is-active' : '' ?>"
+                    <?= $activePage === $item['key'] ? 'aria-current="page"' : '' ?>
+                ><?= lao_e($item['label']) ?></a>
+            <?php endforeach; ?>
+            <a class="nav-portal-link" href="<?= lao_e($baseUrl) ?>/auth/login.php">Customer Portal</a>
+        </nav>
+    </div>
+</header>
+
+<?php if (is_array($flashNotice) && isset($flashNotice['message'])): ?>
+    <div class="container flash-message flash-message--<?= lao_e($flashNotice['type'] ?? 'info') ?>" role="status">
+        <?= lao_e($flashNotice['message']) ?>
+    </div>
+<?php endif; ?>
+
+<main id="main-content">

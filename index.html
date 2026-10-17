@@ -1,0 +1,320 @@
+<?php
+$pageTitle = 'Home';
+
+// Add your WhatsApp number with country code, without + or spaces.
+// Example for South Africa: 27821234567
+$whatsappNumber = '';
+$whatsappMessage = rawurlencode(
+    'Hello Lowveld Application Office & Academy. I would like to enquire about your services.'
+);
+
+$whatsappLink = $whatsappNumber !== ''
+    ? 'https://wa.me/' . $whatsappNumber . '?text=' . $whatsappMessage
+    : 'contact.php';
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#102b4e">
+
+    <title><?= htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') ?> | Lowveld Application Office &amp; Academy</title>
+    <meta name="description" content="Lowveld Application Office & Academy supports education applications, bursary searches, career opportunities and computer training.">
+
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/script.js" defer></script>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="container nav-container">
+        <a href="index.php" class="brand" aria-label="Lowveld Application Office and Academy home">
+            <!-- Temporary text mark; replace with the official logo when its image file is available. -->
+            <span class="brand-mark" aria-hidden="true">LA</span>
+            <span class="brand-text">
+                <strong>LOWVELD</strong>
+                <small>APPLICATION OFFICE &amp; ACADEMY</small>
+            </span>
+        </a>
+
+        <button class="menu-toggle" id="menuToggle" type="button"
+                aria-label="Open navigation menu" aria-expanded="false"
+                aria-controls="mainNavigation">
+            ☰
+        </button>
+
+        <nav class="main-navigation" id="mainNavigation" aria-label="Main navigation">
+            <a href="index.php" class="active" aria-current="page">Home</a>
+            <a href="about.php">About Us</a>
+            <a href="services.php">Services</a>
+            <a href="pricing.php">Pricing</a>
+            <a href="opportunities.php">Opportunities</a>
+            <a href="academy.php">Academy</a>
+            <a href="contact.php" class="nav-contact">Contact Us</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="container hero-content">
+            <span class="eyebrow">YOUR FUTURE. OUR COMMITMENT.</span>
+
+            <h1>
+                Opening Doors to
+                <span>Education &amp; Opportunity.</span>
+            </h1>
+
+            <p class="hero-description">
+                Your partner in education applications, bursary searches,
+                career opportunities and skills development. Let us help
+                you take the next step towards your future.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="services.php" class="btn btn-primary">Explore Our Services</a>
+                <a href="opportunities.php" class="btn btn-outline">Find Opportunities</a>
+            </div>
+
+            <div class="hero-highlights">
+                <div>
+                    <strong>Education</strong>
+                    <span>Application support</span>
+                </div>
+                <div>
+                    <strong>Opportunities</strong>
+                    <span>Bursaries and careers</span>
+                </div>
+                <div>
+                    <strong>Skills Development</strong>
+                    <span>Learning and training</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INTRODUCTION -->
+    <section class="section intro-section">
+        <div class="container intro-grid">
+            <div>
+                <span class="section-label">WELCOME TO LOWVELD</span>
+                <h2>Helping You Move Forward</h2>
+
+                <p>
+                    Finding the right educational institution, funding opportunity
+                    or career pathway can be challenging. Lowveld Application Office
+                    &amp; Academy aims to make the process easier through accessible
+                    information, application assistance and learning support.
+                </p>
+
+                <p>
+                    Whether you are finishing school, pursuing further studies or
+                    developing your computer skills, we are here to help you explore
+                    your options.
+                </p>
+
+                <a href="about.php" class="text-link">Discover Our Story &rarr;</a>
+            </div>
+
+            <div class="intro-card">
+                <span class="intro-card-icon" aria-hidden="true">🎓</span>
+                <h3>Your Next Chapter Starts Here</h3>
+                <p>
+                    Explore opportunities, prepare your applications and take
+                    practical steps towards your goals.
+                </p>
+                <a href="opportunities.php" class="btn btn-primary">Explore Opportunities</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="section services-section">
+        <div class="container">
+            <div class="section-heading">
+                <span class="section-label">WHAT WE DO</span>
+                <h2>Services Designed Around Your Future</h2>
+                <p>Practical support for education, career development and digital skills.</p>
+            </div>
+
+            <div class="card-grid">
+                <article class="service-card">
+                    <span class="card-icon" aria-hidden="true">📚</span>
+                    <h3>University Applications</h3>
+                    <p>Assistance with university applications, requirements and important deadlines.</p>
+                    <a href="services.php" class="text-link">Learn More &rarr;</a>
+                </article>
+
+                <article class="service-card">
+                    <span class="card-icon" aria-hidden="true">🏫</span>
+                    <h3>TVET College Applications</h3>
+                    <p>Explore college programmes and get support preparing your applications.</p>
+                    <a href="services.php" class="text-link">Learn More &rarr;</a>
+                </article>
+
+                <article class="service-card">
+                    <span class="card-icon" aria-hidden="true">💰</span>
+                    <h3>Bursaries &amp; Scholarships</h3>
+                    <p>Discover funding opportunities and understand their eligibility requirements.</p>
+                    <a href="opportunities.php" class="text-link">Find Funding &rarr;</a>
+                </article>
+
+                <article class="service-card">
+                    <span class="card-icon" aria-hidden="true">💼</span>
+                    <h3>Jobs &amp; Learnerships</h3>
+                    <p>Explore job vacancies, internships and learnership opportunities.</p>
+                    <a href="opportunities.php" class="text-link">Explore Careers &rarr;</a>
+                </article>
+
+                <article class="service-card">
+                    <span class="card-icon" aria-hidden="true">💻</span>
+                    <h3>Computer Training</h3>
+                    <p>Develop practical digital skills to support your education and career goals.</p>
+                    <a href="academy.php" class="text-link">Explore Training &rarr;</a>
+                </article>
+
+                <article class="service-card">
+                    <span class="card-icon" aria-hidden="true">📝</span>
+                    <h3>Application Assistance</h3>
+                    <p>Get guidance on application processes, supporting documents and submission steps.</p>
+                    <a href="services.php" class="text-link">Get Assistance &rarr;</a>
+                </article>
+            </div>
+
+            <div class="center-button">
+                <a href="services.php" class="btn btn-dark">View All Services</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- OPPORTUNITIES -->
+    <section class="section opportunities-section">
+        <div class="container opportunities-content">
+            <div>
+                <span class="section-label">YOUR NEXT OPPORTUNITY</span>
+                <h2>Discover What’s Possible</h2>
+
+                <p>
+                    Explore education and career opportunities in one place. Find
+                    information about applications, funding, internships, learnerships
+                    and employment opportunities.
+                </p>
+
+                <ul class="check-list">
+                    <li>University and TVET college opportunities</li>
+                    <li>Bursaries and scholarships</li>
+                    <li>Internships and learnerships</li>
+                    <li>Job opportunities and career development</li>
+                </ul>
+
+                <a href="opportunities.php" class="btn btn-primary">Browse Opportunities</a>
+            </div>
+
+            <div class="opportunity-visual" role="img" aria-label="Decorative navy and green opportunity graphic">
+                <div class="opportunity-badge">
+                    <span>YOUR FUTURE</span>
+                    <strong>STARTS WITH ONE STEP.</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ACADEMY -->
+    <section class="section academy-section">
+        <div class="container academy-content">
+            <div>
+                <span class="section-label">LEARN. GROW. ACHIEVE.</span>
+                <h2>Welcome to Our Academy</h2>
+
+                <p>
+                    Support your academic journey through extra lessons for Grades
+                    9–12 and computer training designed to build confidence and
+                    practical skills.
+                </p>
+
+                <div class="academy-features">
+                    <div>
+                        <strong>Grades 9–12</strong>
+                        <span>Extra lessons</span>
+                    </div>
+                    <div>
+                        <strong>Computer Skills</strong>
+                        <span>Digital learning</span>
+                    </div>
+                </div>
+
+                <a href="academy.php" class="btn btn-primary">Explore the Academy</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CALL TO ACTION -->
+    <section class="cta-section">
+        <div class="container cta-content">
+            <div>
+                <h2>Ready to Take the Next Step?</h2>
+                <p>
+                    Tell us what you need help with, and we’ll explain the available
+                    services and next steps.
+                </p>
+            </div>
+
+            <a href="<?= htmlspecialchars($whatsappLink, ENT_QUOTES, 'UTF-8') ?>"
+               class="btn btn-light"
+               <?php if ($whatsappNumber !== ''): ?>
+                   target="_blank" rel="noopener noreferrer"
+               <?php endif; ?>>
+                Contact Our Office
+            </a>
+        </div>
+    </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+    <div class="container footer-content">
+        <div class="footer-brand">
+            <a href="index.php" class="brand footer-logo">
+                <span class="brand-mark" aria-hidden="true">LA</span>
+                <span class="brand-text">
+                    <strong>LOWVELD</strong>
+                    <small>APPLICATION OFFICE &amp; ACADEMY</small>
+                </span>
+            </a>
+
+            <p>
+                Supporting education, opening opportunities and building skills
+                for the future.
+            </p>
+        </div>
+
+        <div class="footer-links">
+            <h3>Quick Links</h3>
+            <a href="about.php">About Us</a>
+            <a href="services.php">Our Services</a>
+            <a href="pricing.php">Pricing</a>
+            <a href="opportunities.php">Opportunities</a>
+            <a href="academy.php">Academy</a>
+        </div>
+
+        <div class="footer-links">
+            <h3>Get in Touch</h3>
+            <a href="contact.php">Contact Us</a>
+            <a href="faq.php">Frequently Asked Questions</a>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="container">
+            <p>
+                &copy; <?= date('Y') ?> Lowveld Application Office &amp; Academy.
+                All rights reserved.
+            </p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

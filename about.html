@@ -1,0 +1,147 @@
+<?php
+$pageTitle = 'About Us';
+$whatsappNumber = ''; // Add your WhatsApp number without + or spaces.
+$whatsappMessage = rawurlencode('Hello Lowveld Application Office & Academy. I would like to learn more about your services.');
+$whatsappLink = $whatsappNumber !== ''
+    ? 'https://wa.me/' . $whatsappNumber . '?text=' . $whatsappMessage
+    : 'contact.php';
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= htmlspecialchars($pageTitle) ?> | Lowveld Application Office &amp; Academy</title>
+    <meta name="description" content="Learn about Lowveld Application Office & Academy and our commitment to supporting education, applications, career opportunities and digital skills development.">
+    <meta name="theme-color" content="#102b4e">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/script.js" defer></script>
+</head>
+<body>
+<header class="site-header">
+    <div class="container nav-container">
+        <a href="index.php" class="brand" aria-label="Lowveld Application Office and Academy home">
+            <span class="brand-mark">LA</span>
+            <span class="brand-text"><strong>LOWVELD</strong><small>APPLICATION OFFICE &amp; ACADEMY</small></span>
+        </a>
+        <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mainNavigation">☰</button>
+        <nav class="main-navigation" id="mainNavigation">
+            <a href="index.php">Home</a>
+            <a href="about.php" class="active" aria-current="page">About Us</a>
+            <a href="services.php">Services</a>
+            <a href="pricing.php">Pricing</a>
+            <a href="opportunities.php">Opportunities</a>
+            <a href="academy.php">Academy</a>
+            <a href="contact.php" class="nav-contact">Contact Us</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="container hero-content">
+            <span class="eyebrow">ABOUT LOWVELD</span>
+            <h1>Guidance for Your <span>Next Opportunity.</span></h1>
+            <p class="hero-description">We aim to make education information, application support and skills development easier to access—so you can make informed decisions about your future.</p>
+            <div class="hero-buttons">
+                <a href="services.php" class="btn btn-primary">Explore Our Services</a>
+                <a href="contact.php" class="btn btn-outline">Talk to Our Office</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section intro-section">
+        <div class="container intro-grid">
+            <div>
+                <span class="section-label">WHO WE ARE</span>
+                <h2>Helping People Navigate Their Next Steps</h2>
+                <p>Lowveld Application Office &amp; Academy is focused on helping learners, students and job seekers find useful information and support as they explore education and career pathways.</p>
+                <p>From university and TVET college applications to bursary searches, employment opportunities and computer training, our goal is to make the process clearer and more manageable.</p>
+                <p>We believe that reliable information, practical guidance and digital skills can help people take confident steps towards their goals.</p>
+            </div>
+            <div class="intro-card">
+                <span class="intro-card-icon" aria-hidden="true">🌱</span>
+                <h3>Our Purpose</h3>
+                <p>To connect people with information, application assistance and learning support that can help them move forward.</p>
+                <a href="opportunities.php" class="btn btn-primary">Explore Opportunities</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section services-section">
+        <div class="container">
+            <div class="section-heading">
+                <span class="section-label">WHAT GUIDES US</span>
+                <h2>Our Values</h2>
+                <p>The principles we aim to bring to every interaction.</p>
+            </div>
+            <div class="card-grid">
+                <article class="service-card">
+                    <span class="card-icon" aria-hidden="true">🤝</span>
+                    <h3>Support</h3>
+                    <p>We aim to offer helpful, respectful guidance and explain processes in a way people can understand.</p>
+                </article>
+                <article class="service-card">
+                    <span class="card-icon" aria-hidden="true">🔎</span>
+                    <h3>Clarity</h3>
+                    <p>We want customers to understand service details, requirements, prices and next steps before proceeding.</p>
+                </article>
+                <article class="service-card">
+                    <span class="card-icon" aria-hidden="true">📈</span>
+                    <h3>Growth</h3>
+                    <p>We encourage continued learning, digital confidence and informed choices about education and careers.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section opportunities-section">
+        <div class="container opportunities-content">
+            <div>
+                <span class="section-label">HOW WE CAN HELP</span>
+                <h2>Support for Education and Careers</h2>
+                <p>Our website brings together service information and opportunity listings to help you decide what to explore next.</p>
+                <ul class="check-list">
+                    <li>University and TVET college application assistance</li>
+                    <li>Bursary and scholarship opportunity information</li>
+                    <li>Jobs, internships and learnership listings</li>
+                    <li>Extra lessons for Grades 9–12 and computer training</li>
+                </ul>
+                <a href="services.php" class="btn btn-primary">View Our Services</a>
+            </div>
+            <div class="opportunity-visual">
+                <div class="opportunity-badge"><span>TAKE THE NEXT STEP</span><strong>YOUR FUTURE IS WORTH INVESTING IN.</strong></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container cta-content">
+            <div>
+                <h2>Have a Question?</h2>
+                <p>Contact us to ask about our services, request assistance or learn what the next steps may be.</p>
+            </div>
+            <a href="<?= htmlspecialchars($whatsappLink, ENT_QUOTES, 'UTF-8') ?>" class="btn btn-light" <?= $whatsappNumber !== '' ? 'target="_blank" rel="noopener noreferrer"' : '' ?>>Contact Our Office</a>
+        </div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-content">
+        <div class="footer-brand">
+            <a href="index.php" class="brand footer-logo"><span class="brand-mark">LA</span><span class="brand-text"><strong>LOWVELD</strong><small>APPLICATION OFFICE &amp; ACADEMY</small></span></a>
+            <p>Supporting education, opening opportunities and building skills for the future.</p>
+        </div>
+        <div class="footer-links">
+            <h3>Quick Links</h3>
+            <a href="index.php">Home</a><a href="services.php">Our Services</a><a href="pricing.php">Pricing</a><a href="opportunities.php">Opportunities</a><a href="academy.php">Academy</a>
+        </div>
+        <div class="footer-links">
+            <h3>Get in Touch</h3>
+            <a href="contact.php">Contact Us</a><a href="faq.php">Frequently Asked Questions</a>
+        </div>
+    </div>
+    <div class="footer-bottom"><div class="container"><p>&copy; <?= date('Y') ?> Lowveld Application Office &amp; Academy. All rights reserved.</p></div></div>
+</footer>
+</body>
+</html>

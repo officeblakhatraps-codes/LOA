@@ -1,0 +1,196 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Shared helpers for Lowveld Application Office & Academy.
+ *
+ * Include this file after includes/database.php where database access is needed.
+ * Do not put passwords, payment details, or document contents in session data.
+ */
+
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    $isHttps = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== '' && strtolower((string) $_SERVER['HTTPS']) !== 'off';
+
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'domain' => '',
+        'secure' => $isHttps,
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+
+    session_start();
+}
+
+/**
+ * Escape dynamic content before placing it in HTML.
+ */
+function lao_e(mixed $value): string
+{
+    return htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+}
+
+/**
+ * Get or create the session's CSRF token.
+ */
+function lao_csrf_token(): string
+{
+    if (!isset($_SESSION['lao_csrf_token']) || !is_string($_SESSION['lao_csrf_token'])) {
+        $_SESSION['lao_csrf_token'] = bin2hex(random_bytes(32));
+    }
+
+    return $_SESSION['lao_csrf_token'];
+}
+
+/**
+ * Return a CSRF hidden input for use inside a POST form.
+ */
+function lao_csrf_field(): string
+{
+    return '<input type="hidden" name="csrf_token" value="' .
+        lao_e(lao_csrf_token()) . '">';
+}
+
+/**
+ * Check a submitted CSRF token against the session token.
+ */
+function lao_verify_csrf(?string $submittedToken): bool
+{
+    $sessionToken = $_SESSION['lao_csrf_token'] ?? null;
+
+    return is_string($sessionToken)
+        && is_string($submittedToken)
+        && $sessionToken !== ''
+        && hash_equals($sessionToken, $submittedToken);
+}
+
+/**
+ * Stop a POST request if its CSRF token is missing or invalid.
+ * Call this in a POST handler before making changes.
+ */
+function lao_require_valid_csrf(): void
+{
+    if (!lao_verify_csrf(isset($_POST['csrf_token']) && is_string($_POST['csrf_token'])
+        ? $_POST['csrf_token']
+        : null)) {
+        http_response_code(403);
+        exit('Your session token is invalid or has expired. Refresh the page and try again.');
+    }
+}
+
+/**
+ * Store a one-time message to show after a redirect.
+ */
+function lao_flash_set(string $key, string $message, string $type = 'info'): void
+{
+    $allowedTypes = ['success', 'error', 'warning', 'info'];
+
+    if (!isset($_SESSION['lao_flash']) || !is_array($_SESSION['lao_flash'])) {
+        $_SESSION['lao_flash'] = [];
+    }
+
+    $_SESSION['lao_flash'][$key] = [
+        'message' => $message,
+        'type' => in_array($type, $allowedTypes, true) ? $type : 'info',
+    ];
+}
+
+/**
+ * Retrieve and remove a one-time message. Returns null when absent.
+ *
+ * Example:
+ * $flash = lao_flash_get('notice');
+ * if ($flash !== null) { echo lao_e($flash['message']); }
+ */
+function lao_flash_get(string $key): ?array
+{
+    if (!isset($_SESSION['lao_flash']) || !is_array($_SESSION['lao_flash'])) {
+        return null;
+    }
+
+    $flash = $_SESSION['lao_flash'][$key] ?? null;
+    unset($_SESSION['lao_flash'][$key]);
+
+    return is_array($flash) ? $flash : null;
+}
+
+/**
+ * Read the minimal user details that the login handler stores in the session.
+ * The login handler should regenerate the session ID after successful login.
+ */
+function lao_current_user(): ?array
+{
+    $user = $_SESSION['lao_user'] ?? null;
+
+    if (!is_array($user) || !isset($user['id'], $user['role'])) {
+        return null;
+    }
+
+    return $user;
+}
+
+function lao_is_logged_in(): bool
+{
+    return lao_current_user() !== null;
+}
+
+/**
+ * Check the signed-in user's role. Example roles: customer, admin.
+ */
+function lao_user_has_role(string|array $roles): bool
+{
+    $user = lao_current_user();
+
+    if ($user === null || !isset($user['role']) || !is_string($user['role'])) {
+        return false;
+    }
+
+    return in_array($user['role'], (array) $roles, true);
+}
+
+/**
+ * Require a signed-in user. Pass a suitable login URL for the page's location.
+ */
+function lao_require_login(string $loginUrl = 'auth/login.php'): void
+{
+    if (!lao_is_logged_in()) {
+        lao_flash_set('notice', 'Please sign in to continue.', 'warning');
+        header('Location: ' . $loginUrl, true, 302);
+        exit;
+    }
+}
+
+/**
+ * Require one of the specified roles, otherwise return HTTP 403.
+ */
+function lao_require_role(string|array $roles): void
+{
+    if (!lao_is_logged_in()) {
+        http_response_code(401);
+        exit('Please sign in to continue.');
+    }
+
+    if (!lao_user_has_role($roles)) {
+        http_response_code(403);
+        exit('You do not have permission to access this page.');
+    }
+}
+
+/**
+ * Redirect to a local path only. External URLs and protocol-relative paths
+ * are rejected to help prevent open-redirect vulnerabilities.
+ */
+function lao_redirect(string $path): never
+{
+    $path = trim($path);
+
+    if ($path === '' || preg_match('/[\r\n]/', $path) === 1 ||
+        str_starts_with($path, '//') ||
+        preg_match('/^[a-z][a-z0-9+.-]*:/i', $path) === 1) {
+        $path = 'index.php';
+    }
+
+    header('Location: ' . $path, true, 302);
+    exit;
+}

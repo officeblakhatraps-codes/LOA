@@ -1,0 +1,190 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Customer account registration.
+ *
+ * This creates a basic customer account only. It does NOT verify payments,
+ * activate paid services, or grant admin access. Those actions must be handled
+ * separately by the office/admin workflow.
+ */
+require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../includes/database.php';
+
+$pageTitle = 'Create Account';
+$activePage = '';
+
+$errors = [];
+$fullName = '';
+$email = '';
+
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+    lao_require_valid_csrf();
+
+    $fullName = trim((string) ($_POST['full_name'] ?? ''));
+    $email = strtolower(trim((string) ($_POST['email'] ?? '')));
+    $password = isset($_POST['password']) && is_string($_POST['password'])
+        ? $_POST['password']
+        : '';
+    $confirmPassword = isset($_POST['confirm_password']) && is_string($_POST['confirm_password'])
+        ? $_POST['confirm_password']
+        : '';
+    $acceptedTerms = isset($_POST['accept_terms']) && $_POST['accept_terms'] === '1';
+
+    if ($fullName === '' || mb_strlen($fullName) < 2 || mb_strlen($fullName) > 120) {
+        $errors[] = 'Enter your full name (2–120 characters).';
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 254) {
+        $errors[] = 'Enter a valid email address.';
+    }
+
+    if (strlen($password) < 12) {
+        $errors[] = 'Choose a password with at least 12 characters.';
+    } elseif (strlen($password) > 4096) {
+        $errors[] = 'Your password is too long.';
+    }
+
+    if ($password !== $confirmPassword) {
+        $errors[] = 'The passwords do not match.';
+    }
+
+    if (!$acceptedTerms) {
+        $errors[] = 'Please confirm that you have read the Terms of Use and Privacy Policy.';
+    }
+
+    if ($errors === []) {
+        try {
+            $pdo = lao_db();
+
+            $check = $pdo->prepare('SELECT id FROM users WHERE email = :email LIMIT 1');
+            $check->execute(['email' => $email]);
+
+            if ($check->fetch() !== false) {
+                $errors[] = 'An account with that email address may already exist. Try signing in or contact the office.';
+            } else {
+                $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
+                $insert = $pdo->prepare(
+                    'INSERT INTO users (full_name, email, password_hash, role, is_active, created_at)
+                     VALUES (:full_name, :email, :password_hash, :role, :is_active, CURRENT_TIMESTAMP)'
+                );
+                $insert->execute([
+                    'full_name' => $fullName,
+                    'email' => $email,
+                    'password_hash' => $passwordHash,
+                    'role' => 'customer',
+                    'is_active' => 1,
+                ]);
+
+                lao_flash_set(
+                    'notice',
+                    'Your customer account has been created. Sign in to continue. Paid services still require office confirmation and verified payment.',
+                    'success'
+                );
+                lao_redirect('login.php');
+            }
+        } catch (PDOException $exception) {
+            error_log('LAO registration database error: ' . $exception->getMessage());
+
+            // A unique email index in the database is still required to prevent
+            // duplicate accounts if two requests arrive at the same time.
+            $errors[] = 'Registration is temporarily unavailable. Please try again later.';
+        }
+    }
+}
+
+require_once __DIR__ . '/../includes/header.php';
+?>
+<section class="auth-section">
+    <div class="container auth-container">
+        <div class="auth-card">
+            <p class="eyebrow">Customer Portal</p>
+            <h1>Create your account</h1>
+            <p class="auth-intro">Register to keep track of your requests and communicate with the office.</p>
+
+            <?php if ($errors !== []): ?>
+                <div class="form-alert form-alert--error" role="alert">
+                    <p>Please check the following:</p>
+                    <ul>
+                        <?php foreach ($errors as $error): ?>
+                            <li><?= lao_e($error) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
+
+            <form method="post" action="register.php" class="auth-form" autocomplete="on">
+                <?= lao_csrf_field() ?>
+
+                <div class="form-group">
+                    <label for="full_name">Full name</label>
+                    <input
+                        id="full_name"
+                        name="full_name"
+                        type="text"
+                        value="<?= lao_e($fullName) ?>"
+                        autocomplete="name"
+                        minlength="2"
+                        maxlength="120"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        value="<?= lao_e($email) ?>"
+                        autocomplete="email"
+                        maxlength="254"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        autocomplete="new-password"
+                        minlength="12"
+                        maxlength="4096"
+                        aria-describedby="password-help"
+                        required
+                    >
+                    <small id="password-help">Use at least 12 characters. A unique passphrase is recommended.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password">Confirm password</label>
+                    <input
+                        id="confirm_password"
+                        name="confirm_password"
+                        type="password"
+                        autocomplete="new-password"
+                        minlength="12"
+                        maxlength="4096"
+                        required
+                    >
+                </div>
+
+                <div class="form-group form-group--checkbox">
+                    <input id="accept_terms" name="accept_terms" type="checkbox" value="1" required>
+                    <label for="accept_terms">
+                        I have read the <a href="../terms.php">Terms of Use</a> and
+                        <a href="../privacy.php">Privacy Policy</a>.
+                    </label>
+                </div>
+
+                <button class="button button--primary button--full" type="submit">Create Account</button>
+            </form>
+
+            <p class="auth-help">Already registered? <a href="login.php">Sign in</a>.</p>
+        </div>
+    </div>
+</section>
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>

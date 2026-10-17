@@ -1,0 +1,99 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Shared footer for Lowveld Application Office & Academy.
+ *
+ * Include this at the end of each page after the page's main content.
+ * Set LAO_BASE_URL in your configuration if hosted in a subfolder.
+ */
+if (!function_exists('lao_e')) {
+    require_once __DIR__ . '/functions.php';
+}
+
+$baseUrl = defined('LAO_BASE_URL') ? rtrim((string) LAO_BASE_URL, '/') : '';
+
+/*
+ * Replace the example contact/social values below with the business's
+ * confirmed public details before publishing.
+ */
+$publicEmail = 'info@example.com';
+$publicPhone = '';
+$whatsAppNumber = ''; // Digits only, including country code; e.g. 27...
+$facebookUrl = '';
+$instagramUrl = '';
+$tiktokUrl = '';
+?>
+</main>
+
+<footer class="site-footer">
+    <div class="container site-footer__grid">
+        <section class="site-footer__brand" aria-labelledby="footer-brand-title">
+            <h2 id="footer-brand-title">Lowveld Application Office &amp; Academy</h2>
+            <p>Guidance for education applications, bursaries and career opportunities, alongside learning and skills development.</p>
+        </section>
+
+        <nav class="site-footer__links" aria-label="Footer navigation">
+            <h2>Explore</h2>
+            <ul>
+                <li><a href="<?= lao_e($baseUrl) ?>/about.php">About Us</a></li>
+                <li><a href="<?= lao_e($baseUrl) ?>/services.php">Our Services</a></li>
+                <li><a href="<?= lao_e($baseUrl) ?>/pricing.php">Pricing</a></li>
+                <li><a href="<?= lao_e($baseUrl) ?>/opportunities.php">Opportunities</a></li>
+                <li><a href="<?= lao_e($baseUrl) ?>/academy.php">Academy</a></li>
+                <li><a href="<?= lao_e($baseUrl) ?>/faq.php">FAQs</a></li>
+                <li><a href="<?= lao_e($baseUrl) ?>/contact.php">Contact</a></li>
+            </ul>
+        </nav>
+
+        <section class="site-footer__contact" aria-labelledby="footer-contact-title">
+            <h2 id="footer-contact-title">Contact</h2>
+            <?php if ($publicEmail !== '' && $publicEmail !== 'info@example.com'): ?>
+                <p><a href="mailto:<?= lao_e($publicEmail) ?>"><?= lao_e($publicEmail) ?></a></p>
+            <?php endif; ?>
+
+            <?php if ($publicPhone !== ''): ?>
+                <p><a href="tel:<?= lao_e(preg_replace('/[^0-9+]/', '', $publicPhone) ?? '') ?>"><?= lao_e($publicPhone) ?></a></p>
+            <?php endif; ?>
+
+            <?php if ($whatsAppNumber !== '' && preg_match('/^[0-9]{8,15}$/', $whatsAppNumber) === 1): ?>
+                <p><a href="https://wa.me/<?= lao_e($whatsAppNumber) ?>" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a></p>
+            <?php endif; ?>
+
+            <p><a href="<?= lao_e($baseUrl) ?>/contact.php">Send us an enquiry</a></p>
+        </section>
+
+        <section class="site-footer__social" aria-labelledby="footer-social-title">
+            <h2 id="footer-social-title">Follow Us</h2>
+            <ul>
+                <?php if ($facebookUrl !== ''): ?>
+                    <li><a href="<?= lao_e($facebookUrl) ?>" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+                <?php endif; ?>
+                <?php if ($instagramUrl !== ''): ?>
+                    <li><a href="<?= lao_e($instagramUrl) ?>" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+                <?php endif; ?>
+                <?php if ($tiktokUrl !== ''): ?>
+                    <li><a href="<?= lao_e($tiktokUrl) ?>" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+                <?php endif; ?>
+                <?php if ($facebookUrl === '' && $instagramUrl === '' && $tiktokUrl === ''): ?>
+                    <li>Social links will be added soon.</li>
+                <?php endif; ?>
+            </ul>
+        </section>
+    </div>
+
+    <div class="site-footer__bottom">
+        <div class="container site-footer__bottom-inner">
+            <p>&copy; <?= date('Y') ?> Lowveld Application Office &amp; Academy. All rights reserved.</p>
+            <p>
+                <a href="<?= lao_e($baseUrl) ?>/privacy.php">Privacy Policy</a>
+                <span aria-hidden="true"> · </span>
+                <a href="<?= lao_e($baseUrl) ?>/terms.php">Terms of Use</a>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="<?= lao_e($baseUrl) ?>/assets/js/script.js" defer></script>
+</body>
+</html>

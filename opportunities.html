@@ -1,0 +1,247 @@
+<?php
+$pageTitle = 'Opportunities | Lowveld Application Office & Academy';
+$currentPage = 'opportunities';
+$whatsappNumber = ''; // Add the office WhatsApp number in international format, without + or spaces.
+$whatsappMessage = rawurlencode('Hello Lowveld Application Office, I would like help finding an opportunity.');
+$whatsappLink = $whatsappNumber !== ''
+    ? 'https://wa.me/' . $whatsappNumber . '?text=' . $whatsappMessage
+    : 'contact.php';
+
+$categories = [
+    [
+        'category' => 'university',
+        'icon' => '🎓',
+        'title' => 'University Applications',
+        'description' => 'Explore undergraduate study routes, admission requirements, application preparation and important application dates.',
+        'help' => 'Application guidance, document checklists and submission support.'
+    ],
+    [
+        'category' => 'tvet',
+        'icon' => '🛠️',
+        'title' => 'TVET College Applications',
+        'description' => 'Learn about vocational and occupational programmes, entry requirements and the documents colleges may request.',
+        'help' => 'Help choosing a programme and preparing an application.'
+    ],
+    [
+        'category' => 'bursary',
+        'icon' => '💰',
+        'title' => 'Bursaries & Scholarships',
+        'description' => 'Find funding opportunities to investigate, and check each funder’s eligibility rules, required documents and closing date.',
+        'help' => 'Guidance with funding forms and supporting documents.'
+    ],
+    [
+        'category' => 'job',
+        'icon' => '💼',
+        'title' => 'Jobs & Vacancies',
+        'description' => 'Look for entry-level roles and other vacancies. Always confirm the employer, requirements and application method.',
+        'help' => 'CV preparation and application assistance.'
+    ],
+    [
+        'category' => 'internship',
+        'icon' => '🚀',
+        'title' => 'Internships',
+        'description' => 'Explore opportunities to gain workplace experience and build practical skills in your chosen field.',
+        'help' => 'Help preparing a CV and supporting application documents.'
+    ],
+    [
+        'category' => 'learnership',
+        'icon' => '📘',
+        'title' => 'Learnerships & Training',
+        'description' => 'Learn about structured learning programmes that may combine classroom learning with workplace experience.',
+        'help' => 'Guidance on checking eligibility and completing applications.'
+    ],
+];
+
+$navItems = [
+    'index.php' => 'Home',
+    'about.php' => 'About Us',
+    'services.php' => 'Services',
+    'pricing.php' => 'Pricing',
+    'opportunities.php' => 'Opportunities',
+    'academy.php' => 'Academy',
+    'contact.php' => 'Contact',
+];
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore university and TVET applications, bursaries, scholarships, jobs, internships and learnership guidance from Lowveld Application Office & Academy.">
+    <title><?= htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') ?></title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .opportunities-hero{padding:76px 0 64px;background:linear-gradient(125deg,#071b3a 0%,#103a69 65%,#176b50 100%);color:#fff;position:relative;overflow:hidden}
+        .opportunities-hero:after{content:"";position:absolute;width:340px;height:340px;border:55px solid rgba(255,255,255,.06);border-radius:50%;right:-90px;top:-100px}
+        .opportunities-hero .container{position:relative;z-index:1}
+        .opportunities-hero h1{max-width:760px;font-size:clamp(2.15rem,5vw,3.7rem);line-height:1.1;margin:12px 0 18px}
+        .opportunities-hero p{max-width:720px;color:rgba(255,255,255,.86);font-size:1.08rem;line-height:1.75}
+        .eyebrow{font-weight:800;text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;color:#a9e6bd}
+        .opportunities-tools{display:grid;grid-template-columns:minmax(220px,1fr) minmax(190px,270px);gap:14px;margin:26px 0 12px}
+        .opportunities-tools input,.opportunities-tools select{width:100%;padding:14px 15px;border:1px solid #d8e0ea;border-radius:10px;background:#fff;color:#14243a;font:inherit}
+        .opportunities-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:28px}
+        .opportunity-category{background:#fff;border:1px solid #e4eaf1;border-radius:16px;padding:25px;box-shadow:0 8px 25px rgba(12,35,64,.05);display:flex;flex-direction:column;min-height:285px}
+        .opportunity-icon{display:grid;place-items:center;width:52px;height:52px;border-radius:14px;background:#edf7f0;font-size:1.55rem;margin-bottom:17px}
+        .opportunity-category h3{margin:0 0 10px;color:#102746;font-size:1.2rem}
+        .opportunity-category p{color:#5c6a7c;line-height:1.65;margin:0 0 16px}
+        .opportunity-category .help-text{font-size:.9rem;border-top:1px solid #edf0f4;padding-top:14px;margin-top:auto}
+        .section-intro{max-width:760px;color:#5c6a7c;line-height:1.75}
+        .notice-panel{margin-top:38px;padding:24px;border-left:4px solid #228653;background:#f1f8f3;border-radius:0 12px 12px 0}
+        .notice-panel h3{margin:0 0 8px;color:#123a2a}
+        .notice-panel p{margin:0;color:#405b4c;line-height:1.7}
+        .directory-panel{margin-top:30px;padding:30px;border:1px solid #e0e7ef;border-radius:16px;background:#f8fafc}
+        .directory-panel h2{margin-top:0}
+        .empty-state{padding:24px;background:#fff;border:1px dashed #c9d4e1;border-radius:12px;text-align:center;color:#586779;line-height:1.7}
+        .empty-state strong{display:block;color:#183250;font-size:1.1rem;margin-bottom:5px}
+        .no-results{display:none;padding:18px;color:#5c6a7c;text-align:center}
+        .cta-strip{margin-top:38px;padding:28px;border-radius:16px;background:#0b2547;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:20px}
+        .cta-strip h2{margin:0 0 7px;font-size:1.45rem}
+        .cta-strip p{margin:0;color:#d9e4f1;line-height:1.6}
+        .cta-strip a{white-space:nowrap}
+        @media(max-width:850px){.opportunities-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+        @media(max-width:600px){.opportunities-hero{padding:55px 0 45px}.opportunities-tools,.opportunities-grid{grid-template-columns:1fr}.opportunity-category{min-height:unset}.cta-strip{align-items:flex-start;flex-direction:column}.directory-panel{padding:20px}}
+    </style>
+</head>
+<body>
+<header class="site-header">
+    <div class="container header-inner">
+        <a class="brand" href="index.php" aria-label="Lowveld Application Office & Academy home">
+            <span class="brand-mark" aria-hidden="true">LA</span>
+            <span class="brand-name">Lowveld Application Office <small>&amp; Academy</small></span>
+        </a>
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation menu" aria-expanded="false">☰</button>
+        <nav class="main-navigation" id="mainNavigation" aria-label="Main navigation">
+            <?php foreach ($navItems as $href => $label): ?>
+                <a href="<?= htmlspecialchars($href, ENT_QUOTES, 'UTF-8') ?>"<?= $currentPage === pathinfo($href, PATHINFO_FILENAME) ? ' aria-current="page"' : '' ?>>
+                    <?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>
+                </a>
+            <?php endforeach; ?>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <section class="opportunities-hero">
+        <div class="container">
+            <span class="eyebrow">Your next step starts here</span>
+            <h1>Discover opportunities. Prepare with confidence.</h1>
+            <p>Explore study, funding and career pathways. Browse the categories below, check official requirements carefully, and contact our office if you need help preparing an application.</p>
+            <a class="btn btn-light" href="#opportunity-categories">Explore categories ↓</a>
+        </div>
+    </section>
+
+    <section class="section" id="opportunity-categories">
+        <div class="container">
+            <span class="eyebrow" style="color:#218653">Opportunity hub</span>
+            <h2>What are you looking for?</h2>
+            <p class="section-intro">Search the opportunity categories to find the kind of guidance you need. We will use this directory for university and college applications, bursaries, scholarships, jobs, internships and learnerships.</p>
+
+            <div class="opportunities-tools" role="search">
+                <label>
+                    <span class="sr-only">Search opportunity categories</span>
+                    <input id="opportunitySearch" type="search" placeholder="Search study, funding, jobs..." autocomplete="off">
+                </label>
+                <label>
+                    <span class="sr-only">Filter by opportunity category</span>
+                    <select id="categoryFilter">
+                        <option value="all">All categories</option>
+                        <option value="university">University applications</option>
+                        <option value="tvet">TVET applications</option>
+                        <option value="bursary">Bursaries &amp; scholarships</option>
+                        <option value="job">Jobs &amp; vacancies</option>
+                        <option value="internship">Internships</option>
+                        <option value="learnership">Learnerships &amp; training</option>
+                    </select>
+                </label>
+            </div>
+            <p id="resultsCount" aria-live="polite">Showing 6 opportunity categories</p>
+
+            <div class="opportunities-grid" id="categoryGrid">
+                <?php foreach ($categories as $item): ?>
+                    <article class="opportunity-category" data-category="<?= htmlspecialchars($item['category'], ENT_QUOTES, 'UTF-8') ?>" data-search="<?= htmlspecialchars(strtolower($item['title'] . ' ' . $item['description'] . ' ' . $item['help']), ENT_QUOTES, 'UTF-8') ?>">
+                        <div class="opportunity-icon" aria-hidden="true"><?= $item['icon'] ?></div>
+                        <h3><?= htmlspecialchars($item['title'], ENT_QUOTES, 'UTF-8') ?></h3>
+                        <p><?= htmlspecialchars($item['description'], ENT_QUOTES, 'UTF-8') ?></p>
+                        <p class="help-text"><strong>How we can help:</strong> <?= htmlspecialchars($item['help'], ENT_QUOTES, 'UTF-8') ?></p>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+            <div class="no-results" id="noResults">No categories match your search. Try another keyword or choose “All categories”.</div>
+
+            <div class="notice-panel">
+                <h3>Important: verify every opportunity</h3>
+                <p>Closing dates, eligibility rules and required documents can change. Before submitting personal information or paying any fee, verify the opportunity on the organisation’s official website. Never share your password, PIN or one-time banking code with anyone.</p>
+            </div>
+
+            <section class="directory-panel" aria-labelledby="latestListingsTitle">
+                <h2 id="latestListingsTitle">Latest opportunity listings</h2>
+                <p class="section-intro">This section will display individual opportunities with their closing dates, eligibility requirements and official application links when listings are added and verified by the office.</p>
+                <div class="empty-state">
+                    <strong>Opportunity listings are being prepared.</strong>
+                    No individual listings have been published here yet. Please check the relevant institution or funder’s official website for current openings in the meantime.
+                </div>
+            </section>
+
+            <div class="cta-strip">
+                <div>
+                    <h2>Need help with an application?</h2>
+                    <p>Our office can help you prepare documents and work through the application process.</p>
+                </div>
+                <a class="btn btn-primary" href="<?= htmlspecialchars($whatsappLink, ENT_QUOTES, 'UTF-8') ?>">Ask for assistance</a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-inner">
+        <div>
+            <a class="brand footer-brand" href="index.php">
+                <span class="brand-mark" aria-hidden="true">LA</span>
+                <span class="brand-name">Lowveld Application Office <small>&amp; Academy</small></span>
+            </a>
+            <p>Guidance for education, applications and career opportunities.</p>
+        </div>
+        <div class="footer-links">
+            <a href="about.php">About Us</a>
+            <a href="services.php">Services</a>
+            <a href="pricing.php">Pricing</a>
+            <a href="contact.php">Contact</a>
+            <a href="faq.php">FAQs</a>
+        </div>
+        <p class="copyright">&copy; <?= date('Y') ?> Lowveld Application Office &amp; Academy. All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="assets/js/script.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('opportunitySearch');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const cards = Array.from(document.querySelectorAll('.opportunity-category'));
+    const count = document.getElementById('resultsCount');
+    const noResults = document.getElementById('noResults');
+
+    function filterCategories() {
+        const query = searchInput.value.trim().toLowerCase();
+        const category = categoryFilter.value;
+        let visible = 0;
+
+        cards.forEach(function (card) {
+            const matchesText = card.dataset.search.includes(query);
+            const matchesCategory = category === 'all' || card.dataset.category === category;
+            const show = matchesText && matchesCategory;
+            card.hidden = !show;
+            if (show) visible++;
+        });
+
+        count.textContent = 'Showing ' + visible + ' of ' + cards.length + ' opportunity categories';
+        noResults.style.display = visible === 0 ? 'block' : 'none';
+    }
+
+    searchInput.addEventListener('input', filterCategories);
+    categoryFilter.addEventListener('change', filterCategories);
+});
+</script>
+</body>
+</html>
